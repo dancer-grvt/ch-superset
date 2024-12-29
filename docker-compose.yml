@@ -1,0 +1,36 @@
+services:
+  # Since the data directory on clickhouse is not exist by default,
+  # when the volume mount it'll create a folder with root as the owner.
+  # We don't want that, so we need to init & change owner of that folder at the start.
+  clickhouse-standalone-volume-init:
+    image: "busybox"
+    container_name: clickhouse-standalone-volume-init
+    volumes:
+      - clickhouse-standalone-data:/ch-data
+    entrypoint: >
+      /usr/bin/env sh -c "
+        chown -R 101:101 /ch-data 
+      "
+
+  clickhouse:
+    image: "clickhouse/clickhouse-server:24.10.2.80"
+    user: "101:101"
+    container_name: clickhouse-standalone
+    hostname: clickhouse-standalone
+    volumes:
+      - ./conf/clickhouse/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ./conf/clickhouse/named-collection.xml:/etc/clickhouse-server/config.d/named-collection.xml
+      - ./conf/clickhouse/users.xml:/etc/clickhouse-server/users.d/users.xml
+      - clickhouse-standalone-data:/var/lib/clickhouse/data
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    env_file: ".env"
+    depends_on:
+      - clickhouse-standalone-volume-init
+    # superset:
+  #   depends_on:
+  #     - clickhouse-standalone
+  #
+volumes:
+  clickhouse-standalone-data:

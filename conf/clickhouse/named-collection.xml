@@ -1,0 +1,20 @@
+<clickhouse>
+  <named_collections>
+    <edge>
+      <user from_env="EDGE_USER" />
+      <password from_env="EDGE_PASSWORD" />
+      <host from_env="EDGE_HOSTNAME" />
+      <port from_env="EDGE_PORT" />
+      <database from_env="EDGE_DATABASE" />
+      <schema from_env="EDGE_SCHEMA" />
+    </edge>
+
+    <history>
+      <host from_env="HISTORY_HOST" />
+      <port from_env="HISTORY_PORT" />
+      <database from_env="HISTORY_DATABASE" />
+      <user from_env="HISTORY_USER" />
+      <password from_env="HISTORY_PASSWORD" />
+    </history>
+  </named_collections>
+</clickhouse>
